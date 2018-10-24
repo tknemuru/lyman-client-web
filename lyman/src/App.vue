@@ -42,6 +42,10 @@ export default {
 </script>
 
 <style>
+.primary-text {
+  color: #303133;
+}
+
 ul {
   list-style: none;
   display: inline-block;
