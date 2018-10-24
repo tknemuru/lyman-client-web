@@ -2,7 +2,7 @@
   <div id="app">
     <span>{{context}}</span>
     <span>{{hands}}</span>
-    <room-manage-dialog></room-manage-dialog>
+    <room-manage-dialog ref="roomManageDialog"></room-manage-dialog>
     <div class="tiles-container">
       <ul v-for="(tile, i) in hands">
         <li>
@@ -26,6 +26,7 @@ export default {
     }
   },
   mounted() {
+    this.$refs.roomManageDialog.show();
     axios.get('http://localhost:25486/api/')
     .then(response => {
       this.context = response.data.context;
