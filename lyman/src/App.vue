@@ -15,8 +15,21 @@
 
 <script>
 import Vue from 'vue'
+import VueLogger from 'vuejs-logger';
+const isProduction = process.env.NODE_ENV === 'production';
+const options = {
+    isEnabled: true,
+    logLevel : isProduction ? 'error' : 'debug',
+    stringifyArguments : false,
+    showLogLevel : true,
+    showMethodName : true,
+    separator: '|',
+    showConsoleColors: true
+};
+Vue.use(VueLogger, options);
 import RoomMangaeDialog from './assets/js/components/room-manage-dialog.vue'
 Vue.component(RoomMangaeDialog.name, RoomMangaeDialog);
+
 export default {
   name: 'app',
   data() {

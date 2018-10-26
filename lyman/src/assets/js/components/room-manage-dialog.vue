@@ -13,7 +13,6 @@
 		<div class="primary-text">部屋名を入力してください。</div>
 		<el-input placeholder="Please input" v-model="roomName" class="text-input"></el-input>
 		<el-button type="primary" v-on:click="createRoom">決定</el-button>
-		<el-input placeholder="Please input" v-model="roomKey" class="text-input"></el-input>
 	</div>
 	<div v-else-if="'selectRoom' === target" class="contents-container">
 		<div class="primary-text">入室する部屋を選んでください。</div>
@@ -38,6 +37,7 @@ export default {
 			roomName: undefined,
 			playerName: undefined,
 			roomKey: undefined,
+			wind: undefined,
 		}
 	},
 	methods: {
@@ -52,11 +52,24 @@ export default {
 			this.target = target;
 		},
 		createRoom() {
+			this.$log.debug('roomName', this.roomName);
 			axios.post('http://localhost:25486/api/createroom/', {
 				roomName: this.roomName,
 			})
 			.then(response => {
+				this.$log.debug('roomKey', response.data.roomKey);
 				this.roomKey = response.data.roomKey;
+				this.enterRoom();
+			})
+		},
+		enterRoom() {
+			this.$log.debug('roomKey', this.roomKey);
+			axios.post('http://localhost:25486/api/enterroom/', {
+				roomKey: this.roomKey,
+			})
+			.then(response => {
+				this.$log.debug('wind', response.data.wind);
+				this.wind = response.data.wind;
 			})
 		},
 	},
