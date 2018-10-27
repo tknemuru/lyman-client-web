@@ -38,19 +38,18 @@ export default {
 	name: 'room-manage-dialog',
 	data() {
 		return {
-			origin: 'http://localhost:25486',
-			// origin: 'https://lyman-api.appspot.com',
 			target: undefined,
-			roomName: undefined,
-			playerName: undefined,
 			roomKey: undefined,
+			roomName: undefined,
+			playerKey: undefined,
+			playerName: undefined,
+			windIndex: undefined,
 			wind: undefined,
 			rooms: [],
 		}
 	},
 	methods: {
 		show() {
-			this.test();
 			this.setShowTarget('registerName');
 			this.$modal.show('room-manage-dialog');
 		},
@@ -60,15 +59,9 @@ export default {
 		setShowTarget(target) {
 			this.target = target;
 		},
-		test() {
-			axios.get(`${this.origin}/api/`)
-			.then(response => {
-				this.$log.debug(response.data.context);
-			})
-		},
 		createRoom() {
 			this.$log.debug('roomName', this.roomName);
-			axios.post(`${this.origin}/api/createroom/`, {
+			axios.post(`${this.$config.apiOrigin}/api/createroom/`, {
 				roomName: this.roomName,
 			})
 			.then(response => {
@@ -82,24 +75,28 @@ export default {
 			room = room || {};
 			this.roomKey = room.key || this.roomKey;
 			this.$log.debug('roomKey', this.roomKey);
-			axios.post(`${this.origin}/api/enterroom/`, {
+			axios.post(`${this.$config.apiOrigin}/api/enterroom/`, {
 				roomKey: this.roomKey,
 				playerName: this.playerName,
 			})
 			.then(response => {
 				this.$log.debug('wind', response.data.wind);
+				this.windIndex = response.data.windIndex;
 				this.wind = response.data.wind;
+				this.playerKey = response.data.playerKey;
 				this.hide();
 				this.$emit('entered-room', {
 					roomKey: this.roomKey,
 					roomName: this.roomName,
+					windIndex: this.windIndex,
 					wind: this.wind,
+					playerKey: this.playerKey,
 					playerName: this.playerName,
 				});
 			})
 		},
 		searchRoom() {
-			axios.post(`${this.origin}/api/searchroom/`, {})
+			axios.post(`${this.$config.apiOrigin}/api/searchroom/`, {})
 			.then(response => {
 				this.setShowTarget('selectRoom');
 				this.rooms = response.data;
