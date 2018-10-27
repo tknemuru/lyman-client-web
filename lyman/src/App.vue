@@ -53,8 +53,8 @@ export default {
     buildTileImagePath: function(tile) {
       return require(`./assets/image/tiles/${tile}.png`);
     },
-    watchRoom: function() {
-      this.$refs.roomWatcher.poleRoomStatus();
+    watchRoom: function(roomInfo) {
+      this.$refs.roomWatcher.watchRoom(roomInfo.roomKey);
     },
   },
 }

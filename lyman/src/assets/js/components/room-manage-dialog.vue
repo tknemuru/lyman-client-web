@@ -84,6 +84,7 @@ export default {
 			this.$log.debug('roomKey', this.roomKey);
 			axios.post(`${this.origin}/api/enterroom/`, {
 				roomKey: this.roomKey,
+				playerName: this.playerName,
 			})
 			.then(response => {
 				this.$log.debug('wind', response.data.wind);
