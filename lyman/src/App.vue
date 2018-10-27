@@ -2,7 +2,8 @@
   <div id="app">
     <span>{{context}}</span>
     <span>{{hands}}</span>
-    <room-manage-dialog ref="roomManageDialog"></room-manage-dialog>
+    <room-manage-dialog ref="roomManageDialog" @entered-room="watchRoom"></room-manage-dialog>
+    <room-watcher ref="roomWatcher"></room-watcher>
     <div class="tiles-container">
       <ul v-for="(tile, i) in hands" :key="i">
         <li>
@@ -29,6 +30,8 @@ const options = {
 Vue.use(VueLogger, options);
 import RoomMangaeDialog from './assets/js/components/room-manage-dialog.vue'
 Vue.component(RoomMangaeDialog.name, RoomMangaeDialog);
+import RoomWatcher from './assets/js/components/room-watcher.vue'
+Vue.component(RoomWatcher.name, RoomWatcher);
 
 export default {
   name: 'app',
@@ -49,7 +52,10 @@ export default {
   methods: {
     buildTileImagePath: function(tile) {
       return require(`./assets/image/tiles/${tile}.png`);
-    }
+    },
+    watchRoom: function() {
+      this.$refs.roomWatcher.poleRoomStatus();
+    },
   },
 }
 </script>

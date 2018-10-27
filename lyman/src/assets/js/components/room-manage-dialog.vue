@@ -88,6 +88,13 @@ export default {
 			.then(response => {
 				this.$log.debug('wind', response.data.wind);
 				this.wind = response.data.wind;
+				this.hide();
+				this.$emit('entered-room', {
+					roomKey: this.roomKey,
+					roomName: this.roomName,
+					wind: this.wind,
+					playerName: this.playerName,
+				});
 			})
 		},
 		searchRoom() {
