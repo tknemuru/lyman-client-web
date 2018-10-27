@@ -4,7 +4,7 @@
     <span>{{hands}}</span>
     <room-manage-dialog ref="roomManageDialog"></room-manage-dialog>
     <div class="tiles-container">
-      <ul v-for="(tile, i) in hands">
+      <ul v-for="(tile, i) in hands" :key="i">
         <li>
           <img v-bind:src="buildTileImagePath(tile)">
         </li>
@@ -40,10 +40,10 @@ export default {
   },
   mounted() {
     this.$refs.roomManageDialog.show();
-    axios.get('http://localhost:25486/api/')
+    axios.get('https://lyman-api.appspot.com/api/')
     .then(response => {
       this.context = response.data.context;
-      this.hands = this.context.hands[0];
+      this.hands = response.data.context.hands[0];
     })
   },
   methods: {

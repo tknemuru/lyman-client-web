@@ -6,17 +6,22 @@
 		<el-button type="primary" v-on:click="setShowTarget('enterRoom')">決定</el-button>
 	</div>
 	<div v-else-if="'enterRoom' === target" class="contents-container">
-		<el-button type="primary" v-on:click="setShowTarget('selectRoom')">部屋を探す</el-button>
+		<el-button type="primary" v-on:click="searchRoom">部屋を探す</el-button>
 		<el-button type="primary" v-on:click="setShowTarget('createRoom')">部屋をつくる</el-button>
 	</div>
 	<div v-else-if="'createRoom' === target" class="contents-container">
-		<div class="primary-text">部屋名を入力してください。</div>
+		<div class="primary-text">新しい部屋名を入力してください。</div>
 		<el-input placeholder="Please input" v-model="roomName" class="text-input"></el-input>
 		<el-button type="primary" v-on:click="createRoom">決定</el-button>
 	</div>
-	<div v-else-if="'selectRoom' === target" class="contents-container">
+	<div v-else-if="'selectRoom' === target" class="contents-container table-container">
 		<div class="primary-text">入室する部屋を選んでください。</div>
-		<el-input placeholder="Please input" v-model="roomName" class="text-input"></el-input>
+		<el-table :data="rooms" highlight-current-row @current-change="enterRoom" height="240">
+			<el-table-column type="index">				
+			</el-table-column>
+			<el-table-column property="name" label="部屋名">
+			</el-table-column>
+		</el-table>
 	</div>
 </modal>
 </template>
@@ -33,15 +38,19 @@ export default {
 	name: 'room-manage-dialog',
 	data() {
 		return {
+			origin: 'http://localhost:25486',
+			// origin: 'https://lyman-api.appspot.com',
 			target: undefined,
 			roomName: undefined,
 			playerName: undefined,
 			roomKey: undefined,
 			wind: undefined,
+			rooms: [],
 		}
 	},
 	methods: {
 		show() {
+			this.test();
 			this.setShowTarget('registerName');
 			this.$modal.show('room-manage-dialog');
 		},
@@ -51,9 +60,15 @@ export default {
 		setShowTarget(target) {
 			this.target = target;
 		},
+		test() {
+			axios.get(`${this.origin}/api/`)
+			.then(response => {
+				this.$log.debug(response.data.context);
+			})
+		},
 		createRoom() {
 			this.$log.debug('roomName', this.roomName);
-			axios.post('http://localhost:25486/api/createroom/', {
+			axios.post(`${this.origin}/api/createroom/`, {
 				roomName: this.roomName,
 			})
 			.then(response => {
@@ -62,14 +77,24 @@ export default {
 				this.enterRoom();
 			})
 		},
-		enterRoom() {
+		enterRoom(room) {
+			this.$log.debug('room', room);
+			room = room || {};
+			this.roomKey = room.key || this.roomKey;
 			this.$log.debug('roomKey', this.roomKey);
-			axios.post('http://localhost:25486/api/enterroom/', {
+			axios.post(`${this.origin}/api/enterroom/`, {
 				roomKey: this.roomKey,
 			})
 			.then(response => {
 				this.$log.debug('wind', response.data.wind);
 				this.wind = response.data.wind;
+			})
+		},
+		searchRoom() {
+			axios.post(`${this.origin}/api/searchroom/`, {})
+			.then(response => {
+				this.setShowTarget('selectRoom');
+				this.rooms = response.data;
 			})
 		},
 	},
@@ -80,6 +105,9 @@ export default {
 .contents-container {
 	text-align: center;
 	margin-top: 20%;
+}
+.contents-container.table-container {
+	margin-top: 3%;	
 }
 .text-input {
 	width: 50%;
