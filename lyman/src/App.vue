@@ -3,6 +3,7 @@
     <room-manage-dialog ref="roomManageDialog" @entered-room="watchRoom"></room-manage-dialog>
     <room-watcher ref="roomWatcher" @dealted="dealtTiles"></room-watcher>
     <field ref="field"></field>
+    <quick-start ref="quickStart" @started="dealtTiles"></quick-start>
   </div>
 </template>
 
@@ -26,6 +27,8 @@ import RoomWatcher from './assets/js/components/room-watcher.vue'
 Vue.component(RoomWatcher.name, RoomWatcher);
 import Field from './assets/js/components/field.vue'
 Vue.component(Field.name, Field);
+import QuickStart from './assets/js/components/quick-start.vue'
+Vue.component(QuickStart.name, QuickStart);
 
 export default {
   name: 'app',
@@ -34,7 +37,14 @@ export default {
     }
   },
   mounted() {
-    this.$refs.roomManageDialog.show();
+    var quickStart = ('1' === this.$route.query.quickStart);
+    this.$log.debug('quickStart', quickStart);
+    if (quickStart)
+    {
+      this.$refs.quickStart.start();
+    } else {
+      this.$refs.roomManageDialog.show();
+    }
   },
   methods: {
     watchRoom: function(registerInfo) {
