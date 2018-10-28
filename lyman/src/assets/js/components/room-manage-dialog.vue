@@ -30,7 +30,7 @@
 import Vue from 'vue'
 import VModal from 'vue-js-modal'
 import Element from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css';
+import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(VModal);
 Vue.use(Element);
 
