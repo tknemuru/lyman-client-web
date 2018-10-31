@@ -29,6 +29,8 @@ import Field from './assets/js/components/field.vue'
 Vue.component(Field.name, Field);
 import QuickStart from './assets/js/components/quick-start.vue'
 Vue.component(QuickStart.name, QuickStart);
+import Tile from './assets/js/components/tile.vue'
+Vue.component(Tile.name, Tile);
 
 export default {
   name: 'app',
