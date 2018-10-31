@@ -12,6 +12,9 @@ export default {
             loading: undefined,
             watchCount: 0,
             roomKey: undefined,
+            roomName: undefined,
+            windIndex: undefined,
+            wind: undefined,
             playerKey: undefined,
             playerName: undefined,
             players: [],
@@ -19,11 +22,16 @@ export default {
         }
     },
     methods: {
-        watchRoom(registerInfo) {
-            this.roomKey = this.roomKey || registerInfo.roomKey;
-            this.playerKey = this.playerKey || registerInfo.playerKey;
-            this.playerName = this.playerName || registerInfo.playerName;
-            this.players = this.players || [];
+        init(registerInfo) {
+            this.roomKey = registerInfo.roomKey;
+            this.roomName = registerInfo.roomName;
+            this.windIndex = registerInfo.windIndex;
+            this.wind = registerInfo.wind;
+            this.playerKey = registerInfo.playerKey;
+            this.playerName = registerInfo.playerName;
+            this.watchRoom();
+        },
+        watchRoom() {
             this.loading = Loading.service({ fullscreen: true });
             this.$log.debug('watchCount', this.watchCount);
             if (this.watchCount > 100) {
@@ -70,7 +78,15 @@ export default {
             } else {
                 this.loading.lock = false;
                 this.loading.close();
-                this.$emit('dealted', this.room);
+                this.$emit('dealted', {
+                    roomKey: this.roomKey,
+                    roomName: this.roomName,
+                    windIndex: this.windIndex,
+                    wind: this.wind,
+                    playerKey: this.playerKey,
+                    playerName: this.playerName,
+                    room: this.room,
+                });
             }
         },
         dealtTiles() {

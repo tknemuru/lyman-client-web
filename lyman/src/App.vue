@@ -1,9 +1,10 @@
 <template>
   <div id="app">
     <room-manage-dialog ref="roomManageDialog" @entered-room="watchRoom"></room-manage-dialog>
-    <room-watcher ref="roomWatcher" @dealted="dealtTiles"></room-watcher>
-    <field ref="field"></field>
-    <quick-start ref="quickStart" @started="dealtTiles"></quick-start>
+    <room-watcher ref="roomWatcher" @dealted="startGame"></room-watcher>
+    <player ref="player" @completed="update"></player>
+    <field ref="field" @discard="discard"></field>
+    <quick-start ref="quickStart" @started="startGame"></quick-start>
   </div>
 </template>
 
@@ -31,11 +32,14 @@ import QuickStart from './assets/js/components/quick-start.vue'
 Vue.component(QuickStart.name, QuickStart);
 import Tile from './assets/js/components/tile.vue'
 Vue.component(Tile.name, Tile);
+import Player from './assets/js/components/player.vue'
+Vue.component(Player.name, Player);
 
 export default {
   name: 'app',
   data() {
     return {
+      context: undefined,
     }
   },
   mounted() {
@@ -51,12 +55,20 @@ export default {
   methods: {
     watchRoom: function(registerInfo) {
       this.$log.debug('registerInfo', registerInfo);
-      this.$refs.roomWatcher.watchRoom(registerInfo);
+      this.$refs.roomWatcher.init(registerInfo);
     },
-    dealtTiles: function(room) {
-      this.$log.debug('room', room);
-      this.$refs.field.dealtTiles(room);
-    }
+    startGame: function(context) {
+      this.$log.debug('context', context)
+      this.context = context
+      this.$refs.player.init(context.roomKey, context.playerKey)
+      this.$refs.field.init(context)
+    },
+    update: function() {
+      this.$refs.field.update()
+    },
+    discard: function(tile) {
+      this.$refs.player.discard(tile);
+    },
   },
 }
 </script>

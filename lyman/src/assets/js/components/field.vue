@@ -3,10 +3,10 @@
     <div class="tiles-container">
 
     </div>
-    <div class="tiles-container hands-container">
-        <ul v-for="(tile, i) in hand" :key="i">
+    <div v-if="context != null" class="tiles-container hands-container">
+        <ul v-for="(tile, i) in context.room.hand" :key="i">
             <li>
-                <tile :tile="tile"></tile>
+                <tile :tile="tile" @selected="discard"></tile>
             </li>
         </ul>
     </div>
@@ -15,19 +15,32 @@
 
 <script>
 import Vue from 'vue'
-import Tile from './tile.vue'
-Vue.component(Tile.name, Tile);
 
 export default {
   name: 'field',
   data() {
     return {
-      hand: [],
+      context: undefined,
     }
   },
+  mounted: function() {
+  },
   methods: {
-    dealtTiles: function(room) {
-        this.hand = room.hand;
+    init(context) {
+        this.context = context;
+    },
+    update() {
+        axios.post(`${this.$config.apiOrigin}/api/selectroom/`, {
+            roomKey: this.context.roomKey,
+            playerKey: this.context.playerKey,
+        })
+        .then(response => {
+            this.context.room = response.data;            
+        });
+    },
+    discard(tile) {
+        this.$log.debug('tile', tile)
+        this.$emit('discard', tile)
     },
   },
 }

@@ -37,7 +37,20 @@ export default {
             })
             .then(response => {
                 this.$log.debug('response', response.data);
-				this.$emit('started', response.data);
+				this.$emit('started', {
+                    roomKey: response.data.roomKey,
+                    roomName: response.data.roomName,
+                    windIndex: response.data.windIndex,
+                    wind: response.data.wind,
+                    playerKey: response.data.playerKey,
+                    playerName: response.data.playerName,
+                    room: {
+                        state: response.data.state,
+                        players: response.data.players,
+                        hand: response.data.hand,
+                        rivers: response.data.rivers,
+                    },
+                });
 			})
         },
     },
