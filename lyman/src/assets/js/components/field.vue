@@ -1,7 +1,7 @@
 <template>
 <div>
-    <div v-if="context != null && context.room != null" class="tiles-container">
-        <div v-for="(river, wind) in context.room.rivers" :key="wind">
+    <div v-if="rivers != null" class="tiles-container">
+        <div v-for="(river, wind) in rivers" :key="wind">
             <ul v-for="(tile, i) in river" :key="i" :class="windPositions[wind]">
                 <li>
                     <tile :tile="tile" domain="river"></tile>
@@ -9,10 +9,10 @@
             </ul>
         </div>
     </div>
-    <div v-if="context != null && context.room != null" class="tiles-container hands-container">
-        <ul v-for="(tile, i) in context.room.hand" :key="i">
+    <div v-if="hand != null" class="tiles-container hands-container">
+        <ul v-for="(tile, i) in hand" :key="i">
             <li>
-                <tile :tile="tile" domain="hand" @selected="discard"></tile>
+                <tile :tile="tile" domain="hand" @selected="_notifyDiscarded"></tile>
             </li>
         </ul>
     </div>
@@ -21,35 +21,55 @@
 
 <script>
 import Vue from 'vue'
+import Tile from './tile.vue'
+Vue.component(Tile.name, Tile);
 
 export default {
   name: 'field',
   data() {
     return {
-      context: Object,
-      windPositions: Array,
+        /**
+         * 河牌
+         */
+        rivers: Array,
+
+        /**
+         * 手牌
+         */
+        hand: Array,
+
+        /**
+         * 風とフィールド位置の組み合わせ情報
+         */
+        windPositions: Array,
     }
   },
-  mounted: function() {
-  },
   methods: {
-    init(context) {
-        this._buildWindPositions(context.windIndex)
-        this.context = context
+    /**
+     * 初期化処理を実行します。
+     */
+    init(windIndex) {
+        this._buildWindPositions(windIndex)
     },
-    update() {
-        axios.post(`${this.$config.apiOrigin}/api/selectroom/`, {
-            roomKey: this.context.roomKey,
-            playerKey: this.context.playerKey,
-        })
-        .then(response => {
-            this.context.room = response.data
-        });
+
+    /**
+     * 更新処理を実行します。
+     */
+    update(room) {
+            this.rivers = room.rivers
+            this.hand = room.hand
     },
-    discard(tile) {
-        this.$log.debug('tile', tile)
-        this.$emit('discard', tile)
-    },
+
+    /**
+     * 捨牌されたことを通知します。
+     */
+    _notifyDiscarded(tile) {
+        this.$emit('discarded', tile)
+    },    
+
+    /**
+     * 風とフィールド位置の組み合わせ情報を組み立てます。
+     */
     _buildWindPositions(windIndex) {
         var position = ['lower', 'right', 'upper', 'left']
         for(var i = 0; i < position.length; i++) {
@@ -60,7 +80,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 ul {
   list-style: none;
   display: inline-block;

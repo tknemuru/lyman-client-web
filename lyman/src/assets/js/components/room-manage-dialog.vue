@@ -43,8 +43,6 @@ export default {
 			roomName: undefined,
 			playerKey: undefined,
 			playerName: undefined,
-			windIndex: undefined,
-			wind: undefined,
 			rooms: [],
 		}
 	},
@@ -88,10 +86,11 @@ export default {
 				this.$emit('entered-room', {
 					roomKey: this.roomKey,
 					roomName: this.roomName,
-					windIndex: this.windIndex,
-					wind: this.wind,
+					windIndex: esponse.data.windIndex,
+					wind: esponse.data.wind,
 					playerKey: this.playerKey,
 					playerName: this.playerName,
+					firstPlayer: response.data.firstPlayer,
 				});
 			})
 		},

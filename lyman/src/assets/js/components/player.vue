@@ -8,24 +8,63 @@ export default {
     name: 'player',
     data() {
         return {
-            roomKey: undefined,
-            playerKey: undefined,
         }
     },
     methods: {
-        init(roomKey, playerKey) {
-            this.roomKey = roomKey
-            this.playerKey = playerKey
+        /**
+         * ツモを実行します。
+         */
+        draw(roomKey, playerKey) {
+            axios.post(`${this.$config.apiOrigin}/api/draw/`, {
+                roomKey: roomKey,
+                playerKey: playerKey,
+            })
+            .then(response => {
+                this.$log.debug(response)
+                this.$emit('drawn')
+            });
         },
-        discard(tile) {
+
+        /**
+         * AIのツモを実行します。
+         */
+        aiDraw(roomKey, playerKey) {
+            axios.post(`${this.$config.apiOrigin}/api/aiDraw/`, {
+                roomKey: roomKey,
+                playerKey: playerKey,
+            })
+            .then(response => {
+                this.$log.debug(response)
+                this.aiDiscard(roomKey, playerKey)
+            });
+        },
+
+        /**
+         * AIの捨牌を実行します。
+         */
+        aiDiscard(roomKey, playerKey) {
+            axios.post(`${this.$config.apiOrigin}/api/aiDiscard/`, {
+                roomKey: roomKey,
+                playerKey: playerKey,
+            })
+            .then(response => {
+                this.$log.debug(response)
+                this.$emit('discarded')
+            });
+        },
+        
+        /**
+         * 捨牌を実行します。
+         */
+        discard(roomKey, playerKey, tile) {
             axios.post(`${this.$config.apiOrigin}/api/discard/`, {
-                roomKey: this.roomKey,
-                playerKey: this.playerKey,
+                roomKey: roomKey,
+                playerKey: playerKey,
                 tile: tile,
             })
             .then(response => {
                 this.$log.debug(response)
-                this.$emit('completed')
+                this.$emit('discarded')
             });
         }
     }

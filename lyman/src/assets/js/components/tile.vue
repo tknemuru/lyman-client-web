@@ -1,5 +1,5 @@
 <template>
-<img :class=domain v-bind:src="buildTileImagePath(tile)" @dblclick="selected">
+<img :class=domain v-bind:src="buildTileImagePath(tile)" @dblclick="_notifySelected">
 </template>
 
 <script>
@@ -14,10 +14,17 @@ export default {
     domain: String,
   },
   methods: {
+    /**
+     * 画像パスを組み立てます。
+     */
     buildTileImagePath: function(tile) {
         return require(`../../image/tiles/${tile}.png`);
     },
-    selected: function() {
+
+    /**
+     * 選択されたことを知らせます。
+     */
+    _notifySelected: function() {
         this.$emit('selected', this.tile)
     }
   },

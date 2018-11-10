@@ -17,19 +17,21 @@ export default {
             wind: undefined,
             playerKey: undefined,
             playerName: undefined,
+            firstPlayer: Boolean,
             players: [],
             room: undefined,
         }
     },
     methods: {
         init(registerInfo) {
-            this.roomKey = registerInfo.roomKey;
-            this.roomName = registerInfo.roomName;
-            this.windIndex = registerInfo.windIndex;
-            this.wind = registerInfo.wind;
-            this.playerKey = registerInfo.playerKey;
-            this.playerName = registerInfo.playerName;
-            this.watchRoom();
+            this.roomKey = registerInfo.roomKey
+            this.roomName = registerInfo.roomName
+            this.windIndex = registerInfo.windIndex
+            this.wind = registerInfo.wind
+            this.playerKey = registerInfo.playerKey
+            this.playerName = registerInfo.playerName
+            this.firstPlayer = registerInfo.firstPlayer
+            this.watchRoom()
         },
         watchRoom() {
             this.loading = Loading.service({ fullscreen: true });
@@ -80,11 +82,11 @@ export default {
                 this.loading.close();
                 this.$emit('dealted', {
                     roomKey: this.roomKey,
-                    roomName: this.roomName,
                     windIndex: this.windIndex,
                     wind: this.wind,
                     playerKey: this.playerKey,
                     playerName: this.playerName,
+                    firstPlayer: this.firstPlayer,
                     room: this.room,
                 });
             }
