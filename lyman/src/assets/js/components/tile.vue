@@ -1,5 +1,5 @@
 <template>
-<img :class=domain v-bind:src="buildTileImagePath(tile)" @dblclick="_notifySelected">
+<img :class="{hand: ('hand' === domain), river: ('river' === domain), last: last}" v-bind:src="buildTileImagePath(tile)" @dblclick="_notifySelected">
 </template>
 
 <script>
@@ -12,6 +12,7 @@ export default {
   props: {
     tile: Number,
     domain: String,
+    last: Boolean,
   },
   methods: {
     /**
@@ -39,7 +40,7 @@ img {
 img.river {
     width: 40px;
 }
-.hand:hover {
+.hand:hover,.hand.last {
     margin-bottom: 40%;
     cursor: pointer;
 }

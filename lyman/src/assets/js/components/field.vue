@@ -12,7 +12,7 @@
     <div v-if="hand != null" class="tiles-container hands-container">
         <ul v-for="(tile, i) in hand" :key="i">
             <li>
-                <tile :tile="tile" domain="hand" @selected="_notifyDiscarded"></tile>
+                <tile :tile="tile" :last="(hand.length - 1) === i" domain="hand" @selected="_notifyDiscarded"></tile>
             </li>
         </ul>
     </div>
