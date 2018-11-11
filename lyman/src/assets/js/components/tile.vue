@@ -1,5 +1,5 @@
 <template>
-<img :class="{hand: ('hand' === domain), river: ('river' === domain), last: last}" v-bind:src="buildTileImagePath(tile)" @dblclick="_notifySelected">
+<img :class="classObject" v-bind:src="buildTileImagePath(tile)" @dblclick="_notifySelected">
 </template>
 
 <script>
@@ -13,6 +13,15 @@ export default {
     tile: Number,
     domain: String,
     last: Boolean,
+  },
+  computed: {
+    classObject: function () {
+      return {
+        hand: ('hand' === this.domain),
+        river: ('river' === this.domain),
+        last: this.last,
+      }
+    }
   },
   methods: {
     /**
@@ -38,7 +47,16 @@ img {
     height: auto;
 }
 img.river {
-    width: 40px;
+    width: 30px;
+}
+.left img.river {
+  transform: rotate(90deg);
+}
+.right img.river {
+  transform: rotate(-90deg);
+}
+.upper img.river {
+  transform: rotate(180deg);
 }
 .hand:hover,.hand.last {
     margin-bottom: 40%;
